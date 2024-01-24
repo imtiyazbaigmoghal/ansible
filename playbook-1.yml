@@ -1,0 +1,11 @@
+---
+-
+  hosts: sam-dev
+  tasks:
+    - name: set fact example
+      set_fact:
+        webport: 8080
+    - name: debug example
+      debug:
+        msg: Ansible dist {{ ansible_distribution }} and The port number is   {{ webport }}
+...

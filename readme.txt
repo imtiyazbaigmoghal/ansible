@@ -1,3 +1,27 @@
+Goto diveintoansible-lab
+Run docker-compose up
+
+[control]
+ubuntu-c ansible_connection=local
+
+[centos]
+centos1 ansible_port=2222
+centos[2:3]
+
+[centos:vars]
+ansible_user=root
+
+[ubuntu]
+ubuntu[1:3]
+
+[ubuntu:vars]
+ansible_become=true
+ansible_become_pass=password
+
+[linux:children]
+centos
+ubuntu
+
 SSH
 cat ~/.ssh/known_hosts
 ssh-keygen -H -F ubuntu1
@@ -71,6 +95,15 @@ ansible all -a 'hostname' -o
 ansible all -a 'rm /tmp/test_comman_module removes=/tmp/test_comman_module'
 
 ansible all -m file -a 'path=/tmp/test_module.txt state=touch mode=600' -o
+
+ansible centos1 -m setup -a 'gather_subset=network' | more
+ansible centos1 -m setup -a 'gather_subset=network' | wc -l
+ansible centos1 -m setup -a 'gather_subset=!all,!min,network' | wc -l
+ansible centos1 -m setup -a 'gather_subset=!all,!min,network' | more
+
+ansible centos1 -m setup -a 'filter=ansible_mem*'
+
+ansible-playbook facts_playbook.yaml -l ubuntu-c
 
 
 
